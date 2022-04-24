@@ -1,0 +1,25 @@
+---
+- name: Update motd
+  template:
+    src: "motd.j2"
+    dest: "/etc/motd"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  become: true
+
+- name: "Update bashrc: colour prompt"
+  lineinfile:
+    path: "/etc/bash.bashrc"
+    regexp: "force_color_prompt=yes"
+    line: "force_color_prompt=yes"
+    state: present
+    insertafter: EOF
+  when: basics_colorprompt | bool
+  become: true
+
+- name: "admin adduser"
+  ansible.builtin.user:
+    name: admin
+    comment: Admin
+    groups: sudo
